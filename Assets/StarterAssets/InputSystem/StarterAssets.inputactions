@@ -52,12 +52,12 @@
                 },
                 {
                     "name": "Hang",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "d2257289-98bc-4278-994b-8e9b07640286",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
+                    "interactions": "Press",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [

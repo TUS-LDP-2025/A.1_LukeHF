@@ -1,3 +1,4 @@
+using StarterAssets;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,7 +22,7 @@ public class Hang : MonoBehaviour
     private CharacterController controller;
 
     // bools to let me know if I'm hanging or holding the button
-    private bool isHanging = false;
+    public bool isHanging = false;
     private bool hangButtonHeld = false;
 
     private Vector3 spherePos;
@@ -33,6 +34,10 @@ public class Hang : MonoBehaviour
     // store the normal gravity for when the player stops hanging
     private Vector3 playerVelocity;
     public float gravity = -9.81f;
+
+    private float groundedCooldown = 0;
+
+    public FirstPersonController fpc;
 
     void Start()
     {
@@ -81,8 +86,10 @@ public class Hang : MonoBehaviour
         isHanging = true;
         currentHangPoint = hangPoint;
 
+        controller.enabled = false;
+
         // target position = hang point - offset down
-        Vector3 targetPos = hangPoint.position - Vector3.up * hangOffset;
+        Vector3 targetPos = hangPoint.position - Vector3.up / hangOffset;
 
         // move smoothly to hang position
         while (Vector3.Distance(transform.position, targetPos) > 0.5f && hangButtonHeld)
@@ -91,17 +98,25 @@ public class Hang : MonoBehaviour
             yield return null;
         }
 
+        transform.position = targetPos;
+
         // now stay hanging in place
         while (hangButtonHeld)
         {
-            // keep player "frozen" at position
-            transform.position = targetPos;
             yield return null;
         }
 
         // when H released
         StopHanging();
     }
+
+    /*IEnumerator EnableControllerNextFrame()
+    {
+        yield return null; // wait one frame
+        transform.position += -transform.forward * 0.3f + Vector3.down * 0.3f;
+        controller.enabled = true;
+        playerVelocity.y = -5f; // start falling
+    }*/
 
     void StopHanging()
     {
@@ -112,20 +127,33 @@ public class Hang : MonoBehaviour
 
         isHanging = false;
         currentHangPoint = null;
+
+        controller.enabled = true;
+
+        transform.position += Vector3.down * 0.3f;
+
+        groundedCooldown = 0.2f;
+        playerVelocity.y = -5f;
     }
 
     void Update()
     {
         spherePos = sphereTransform.position;
 
+        if(!controller.enabled)
+             return;
+        
+
+        if (groundedCooldown > 0f)
+            groundedCooldown -= Time.deltaTime;
+
         // only apply gravity when not hanging
         if (!isHanging)
         {
-            // simple gravity handling
-            if (controller.isGrounded && playerVelocity.y < 0)
-            {
-                playerVelocity.y = -2f; // small downward force to keep grounded
-            }
+            // simple gravity and ground checking
+            bool canGroundCheck = groundedCooldown <= 0f;
+            if (canGroundCheck && controller.isGrounded && playerVelocity.y < 0)
+                playerVelocity.y = -2f;
 
             playerVelocity.y += gravity * Time.deltaTime;
             controller.Move(playerVelocity * Time.deltaTime);
