@@ -1218,8 +1218,10 @@ MonoBehaviour:
   hangOffset: 0.5
   moveToHangSpeed: 5
   hangableTag: Hangable
+  isHanging: 0
   sphereTransform: {fileID: 365047252}
   gravity: -9.81
+  fpc: {fileID: 0}
 --- !u!1001 &1614301446
 PrefabInstance:
   m_ObjectHideFlags: 0
