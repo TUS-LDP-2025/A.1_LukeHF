@@ -35,6 +35,8 @@ public class Deflate : MonoBehaviour
     {
         rayOrigin = playerTransform.position;
         RayWallCheck();
+
+        Debug.Log(rayHit); 
     }
 
     public void OnDeflate(InputValue value)
@@ -47,7 +49,7 @@ public class Deflate : MonoBehaviour
                 transform.localScale = new Vector3(originalScale.x * deflateWidthScale, originalScale.y, originalScale.z);
 
             }
-            else if (!value.isPressed && rayHit == false)
+            else if (rayHit == false)
             {
                 playerCol.radius = ccOrigRadius;
                 transform.localScale = originalScale;
@@ -57,23 +59,27 @@ public class Deflate : MonoBehaviour
 
     void RayWallCheck()
     {
+        Debug.DrawRay(rayOrigin, rayDirectionL * rayDistance);
+
+        Debug.DrawRay(rayOrigin, rayDirectionR * rayDistance);
         if (Physics.Raycast(rayOrigin, rayDirectionR, rayDistance, wallLayer))
         {
             rayHit = true;
-            Gizmos.DrawRay(rayOrigin, rayDirectionR * rayDistance);
+            
             Debug.Log("Ray hit right wall");
 
         }
         if (Physics.Raycast(rayOrigin, rayDirectionL, rayDistance, wallLayer))
         {
             rayHit = true;
-            Gizmos.DrawRay(rayOrigin, rayDirectionL * rayDistance);
+            
             Debug.Log("Ray hit left wall");
 
         }
         else
         {
             rayHit = false;
+
             Debug.Log("Ray not hitting wall");
         }
     }
