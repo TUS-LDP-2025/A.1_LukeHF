@@ -6,32 +6,22 @@ using UnityEngine.InputSystem;
 
 public class Hang : MonoBehaviour
 {
-    // how far the player can be from a hangable object
     public float hangCheckRadius = 1.0f;
-
-    // how far below the hang point the player should be when hanging
     public float hangOffset = 0.5f;
-
-    // how fast the player moves into position when starting to hang
     public float moveToHangSpeed = 5f;
 
-    // what tag to look for
     public string hangableTag = "Hangable";
 
-    // reference to the CharacterController
     private CharacterController controller;
 
-    // bools to let me know if I'm hanging or holding the button
     public bool isHanging = false;
     private bool hangButtonHeld = false;
 
     private Vector3 spherePos;
     public Transform sphereTransform;
 
-    // where the player is currently hanging from
     private Transform currentHangPoint;
 
-    // store the normal gravity for when the player stops hanging
     private Vector3 playerVelocity;
     public float gravity = -9.81f;
 
@@ -109,14 +99,6 @@ public class Hang : MonoBehaviour
         // when H released
         StopHanging();
     }
-
-    /*IEnumerator EnableControllerNextFrame()
-    {
-        yield return null; // wait one frame
-        transform.position += -transform.forward * 0.3f + Vector3.down * 0.3f;
-        controller.enabled = true;
-        playerVelocity.y = -5f; // start falling
-    }*/
 
     void StopHanging()
     {
