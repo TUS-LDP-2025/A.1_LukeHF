@@ -35,6 +35,23 @@ public class Throw : MonoBehaviour
                 Time.deltaTime * holdSmoothing
             );
         }
+
+        TryPickUp();
+    }
+
+    void OnThrow(InputValue value)
+    {
+        if (value.isPressed)
+        {
+            if (isHolding)
+            {
+                ThrowObject();
+            }
+            else
+            {
+                //TryPickUp();
+            }
+        }
     }
 
 
@@ -61,7 +78,7 @@ public class Throw : MonoBehaviour
         if (heldRb)
         {
             heldRb.useGravity = false;
-            heldRb.velocity = Vector3.zero;
+            heldRb.linearVelocity = Vector3.zero;
             heldRb.angularVelocity = Vector3.zero;
 
             // disable collision between player and object
@@ -73,6 +90,34 @@ public class Throw : MonoBehaviour
             }
         }
 
+    }
+
+    void ThrowObject()
+    {
+        if (!isHolding || heldObject == null)
+            return;
+
+        // Detach from player
+        heldObject.transform.SetParent(null);
+
+        // Re-enable physics
+        heldRb.useGravity = true;
+
+        // Enable collisions again
+        Collider objCol = heldObject.GetComponent<Collider>();
+        Collider playerCol = GetComponent<Collider>();
+        if (playerCol && objCol)
+        {
+            Physics.IgnoreCollision(playerCol, objCol, false);
+        }
+
+        // Apply throw force in camera's forward direction
+        heldRb.AddForce(cameraTransform.forward * throwForce, ForceMode.Impulse);
+
+        // Clear reference
+        heldObject = null;
+        heldRb = null;
+        isHolding = false;
     }
 
 }
