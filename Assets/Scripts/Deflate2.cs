@@ -49,8 +49,6 @@ public class Deflate2 : MonoBehaviour
         // Check if the deflate button/key is currently being pressed
         bool deflatePressed = deflateAction != null && deflateAction.action.ReadValue<float>() > 0.5f;
 
-        // --- Handle input and send messages to other scripts ---
-
         // If the player just started pressing deflate
         if (deflatePressed && !isDeflating)
         {
@@ -101,7 +99,7 @@ public class Deflate2 : MonoBehaviour
             rayHit = true;
             Debug.Log("Ray hit left wall");
         }
-        // If the left ray did not hit, reset rayHit to false
+        // If the ray did not hit, reset rayHit to false
         else
         {
             rayHit = false;
