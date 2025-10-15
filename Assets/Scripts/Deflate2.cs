@@ -53,15 +53,11 @@ public class Deflate2 : MonoBehaviour
         if (deflatePressed && !isDeflating)
         {
             isDeflating = true;
-            // Send a message called "OnDeflateStart" (if another script is listening for it)
-            SendMessage("OnDeflateStart", SendMessageOptions.DontRequireReceiver);
         }
         // If the player released the deflate button AND we aren’t near a wall
         else if (!deflatePressed && isDeflating && !rayHit)
         {
-            isDeflating = false;
-            // Send a message called "OnDeflateEnd" (if another script is listening for it)
-            SendMessage("OnDeflateEnd", SendMessageOptions.DontRequireReceiver);
+            isDeflating = false;    
         }
 
         // --- Calculate the collider radius we want to move toward ---
